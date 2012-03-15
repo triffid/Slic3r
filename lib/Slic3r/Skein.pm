@@ -136,8 +136,11 @@ sub go {
     if (@$Slic3r::post_process) {
         $self->status_cb->(95, "Running post-processing scripts");
         for (@$Slic3r::post_process) {
-            Slic3r::debugf "  '%s' '%s'\n", $_, $output_file;
-            system($_, $output_file);
+			my $f = $_;
+			$f = "$FindBin::Bin/utils/post-processing/$f";
+			die "cannot find $f" unless -e $f;
+            Slic3r::debugf "  '%s' '%s'\n", $f, $output_file;
+            system($f, $output_file);
         }
     }
     
